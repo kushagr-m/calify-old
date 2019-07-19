@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Unimelb Calendar to ICS</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="css.css">
+    </head>
+    <body>
+        <div class="container">
+            <h2 class="font-weight-normal">Calify</h2>
+            <h5 class="font-weight-normal mb-3">A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.</h5>
+            <p id="info"></p>
+            <form id="form">
+                <textarea id="inputfield" class="form-control text-monospace" placeholder="copied data" rows="6"></textarea>
+                <button id="submit" class="btn btn-primary my-3">Generate</button>
+            </form>
+        </div>
+
+
+        <script src="parse.js"></script>
+        <script src="js/ics.js"></script>
+        <script>
+        var semester = {
+                'friendly_name': 'Semester 2, 2019',
+                'start': '2019-07-29', // First day of semester
+                'end_1': '2019-09-26', // Day before break starts
+                'start_2': '2019-10-7', // First day back
+                'classes_end': '2019-10-28' // Last day of classes
+            };
+        
+        document.getElementById('info').innerHTML = 'The current timetable pool is for ' + semester['friendly_name'] + '.'
+
+        document.getElementById('submit').addEventListener("click", function(e){
+            e.preventDefault();
+            var text = document.getElementById('inputfield').value;
+            // remove scripts - https://stackoverflow.com/questions/6659351/removing-all-script-tags-from-html-with-js-regular-expression
+            var SCRIPT_RE = /<script(?:(?!\/\/)(?!\/\*)[^'"]|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\/.*(?:\n)|\/\*(?:(?:.|\s))*?\*\/)*?<\/script\s*>/gi;
+            while (SCRIPT_RE.test(text)) {
+                text = text.replace(SCRIPT_RE, '');
+            };
+            // parsing
+            var el = text_to_el(text);
+            var subjects = getSubjects(el);
+            console.log(subjects);
+            var classes = getClasses(el, subjects);
+            console.log(classes);
+            // output
+            var result = 'Found ' + Object.keys(subjects).length + ' subjects, ' + classes.length + ' classes.';
+            var res_el = document.createElement('p');
+            res_el.innerHTML = result;
+            document.getElementsByTagName('div')[0].appendChild(res_el);
+
+        });
+
+        </script>
+
+    </body>
+</html>
