@@ -1,19 +1,57 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Unimelb Calendar to ICS</title>
+        <title>Calify for Unimelb</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="css.css">
     </head>
     <body>
-        <div class="container">
-            <h2 class="font-weight-normal">Calify</h2>
+        <div class="container pt-5">
+            <h1 class="font-weight-normal">Calify</h1>
             <h5 class="font-weight-normal mb-3">A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.</h5>
             <p id="info"></p>
-            <form id="form">
-                <textarea id="inputfield" class="form-control text-monospace" placeholder="copied data" rows="6"></textarea>
-                <button id="submit" class="btn btn-primary my-3">Generate</button>
-            </form>
+            
+            <h4>Step 1</h4>
+            <p>
+                Log in to the <a href="https://prod.ss.unimelb.edu.au/student/SM/StudentTtable10.aspx?r=%23UM.STUDENT.APPLICANT&f=%24S1.EST.TIMETBL.WEB">timetabling website</a>. Keep the page open; You'll need it for the next step.
+            </p>
+
+            <h4>Step 2</h4>
+            <p>
+                You're going to need to <b>copy the source code of <em>the timetable webpage</em></b>, so that we can parse it and generate your timetable. 
+            </p>
+            <p>
+                On most browsers, you can look at the source code by right-clicking somewhere on that page and then clicking on 'View page source'. 
+                Once you've found the source code, select all of it (by pressing <span class="text-monospace">CTRL-A</span> or <span class="text-monospace">CMD-A</span>) and copy it by pressing <span class="text-monospace">CTRL-C</span> or <span class="text-monospace">CMD-C</span>.
+            </p>
+
+            <h4>Step 3</h4>
+            <p>
+                Once you've copied the source code from the timetable site, <b>paste it into the box</b> below.
+            </p>
+            <p class="small">
+                This source code does not contain any identifying information, and all of the generation is done without sending anything to any server, so I'm probably not going to be able to steal your data.
+            </p>
+
+
+            <textarea id="inputfield" class="form-control text-monospace" placeholder="copied data" rows="6"></textarea>
+            <div class="mt-3 mb-n3">
+                <h4>Step 4</h4>
+                <p>
+                    Press the button to download your timetable!
+                </p>
+            </div>
+            <button id="submit" class="btn btn-primary my-3">Generate</button>
+            <div>
+                <p>
+                    Once you've got your .ics file, you can open it in any calendar application, such as Apple Calendar and Microsoft Outlook. You can also <a href="https://calendar.google.com/calendar/r/settings/export">sync it with your Google Calendar</a>.
+                </p>
+            </div>
+            <hr>
+            <small>
+                Not associated with the University of Melbourne.<br>
+                <!-- Made by <a href="https://kushagr.net/">Kush M</a>.<br>  -->
+                Source on <a href="https://github.com/theKKCD/calify">GitHub</a>.
+            </small>
         </div>
 
         <!-- Parsing -->
@@ -37,6 +75,9 @@
 
             // Get text from input box
             var text = document.getElementById('inputfield').value;
+            if (text.trim() == '') {
+                return
+            }
             // remove scripts - https://stackoverflow.com/questions/6659351/removing-all-script-tags-from-html-with-js-regular-expression
             var SCRIPT_RE = /<script(?:(?!\/\/)(?!\/\*)[^'"]|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\/.*(?:\n)|\/\*(?:(?:.|\s))*?\*\/)*?<\/script\s*>/gi;
             while (SCRIPT_RE.test(text)) {
@@ -50,11 +91,14 @@
             var classes = getClasses(el, subjects);
             // console.log(classes);
 
+            if (classes.length == 0) {
+                return
+            }
             // Output result
-            var result = 'Found ' + Object.keys(subjects).length + ' subjects, ' + classes.length + ' classes.';
-            var res_el = document.createElement('p');
-            res_el.innerHTML = result;
-            document.getElementsByTagName('div')[0].appendChild(res_el);
+            // var result = 'Found ' + Object.keys(subjects).length + ' subjects, ' + classes.length + ' classes.';
+            // var res_el = document.createElement('p');
+            // res_el.innerHTML = result;
+            // document.getElementsByTagName('div')[0].appendChild(res_el);
 
             var ics = classesToICS(classes, semester['start'], semester['last'], semester['msBreak']);
             console.log(ics);
