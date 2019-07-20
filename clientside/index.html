@@ -20,8 +20,6 @@
         <script src="parse.js"></script>
         <!-- Calendar Generation -->
         <script src="ical.js"></script>
-        <!-- SaveAs -->
-        <script src="FileSaver.min.js"></script>
         <script>
         var semester = {
                 'friendly_name': 'Semester 2, 2019',
@@ -60,7 +58,7 @@
 
             var ics = classesToICS(classes, semester['start'], semester['last'], semester['msBreak']);
             console.log(ics);
-            
+
             saveData(ics, "uni.ics");
 
         });
