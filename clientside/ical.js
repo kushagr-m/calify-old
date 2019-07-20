@@ -1,30 +1,10 @@
-// `BEGIN:VCALENDAR
-// VERSION:2.0
-// PRODID:-//hacksw/handcal//NONSGML v1.0//EN
-// BEGIN:VEVENT
-// UID:uid1@example.com
-// DTSTAMP:19970714T170000Z
-// ORGANIZER;CN=John Doe:MAILTO:john.doe@example.com
-// DTSTART:19970714T170000Z
-// DTEND:19970715T035959Z
-// SUMMARY:Bastille Day Party
-// GEO:48.85299;2.36885
-// END:VEVENT
-// END:VCALENDAR`
-
-// timezone info from https://github.com/mcpower/icallate/blob/gh-pages/index.html
-
 function classesToICS(classes, semStart, lastDay, msBreak) {
     var ical = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:UnimelbCalendarToICS\n";
 
     var startDate = new Date(semStart)
     var lastDay = new Date(lastDay)
     var msBreak = new Date(msBreak)
-    // var events = '';
-    // for (let i = 0; i < classes.length; i++) {
-    //     var cla = classes[i];
-    //     events += classToVEVENT(cla, startDate, lastDay, msBreak);
-    // };
+
     var events = classes.map(cla => classToVEVENT(cla, startDate, lastDay, msBreak)).join('');
 
     var final = ical + events + 'END:VCALENDAR\n'
@@ -32,26 +12,6 @@ function classesToICS(classes, semStart, lastDay, msBreak) {
 }
 
 function classToVEVENT(thisclass, startDate, lastDay, msBreak) {
-    // class: "Lecture 1 (4)"
-    // code: "MAST10006"
-    // day: "Mon"
-    // location: "Parkville Redmond Barry 101 (Lyle Theatre)"
-    // name: "Calculus 2"
-    // time: "3:15 pm-4:15 pm"
-    // time_begin: "3:15 pm"
-    // time_end: "4:15 pm"
-    // 
-    // BEGIN:VEVENT
-    // CLASS:PUBLIC
-    // DESCRIPTION:Lecture 1 (4)
-    // DTSTART;TZID=Australia/Melbourne:20190729T151500
-    // RRULE:FREQ=WEEKLY;UNTIL=20191027T000000
-    // EXDATE;TZID=Australia/Melbourne:20180402T151500
-    // DTEND;TZID=Australia/Melbourne:20190729T161500
-    // LOCATION:Parkville Redmond Barry 101 (Lyle Theatre)
-    // SUMMARY;LANGUAGE=en-us:MAST10006 Calculus 2 Lecture 1 (4)
-    // TRANSP:TRANSPARENT
-    // END:VEVENT
     var startday = fdaString(startDate, thisclass['day']);
     var DTSTAMP = dateToX(new Date()) + 'T000000';
     var DTSTART = startday + 'T' + timeToHours(thisclass['time_begin']) + '00';
