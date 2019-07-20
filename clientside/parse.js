@@ -4,7 +4,6 @@
 function text_to_el(text) {
     var el = document.createElement('html');
     el.innerHTML = text;
-    console.log(el);
     return el;
 }
 
