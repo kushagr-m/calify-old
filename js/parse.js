@@ -1,5 +1,11 @@
-// Utility to convert unimelb calendar to ICS format.
-// by Kushagr Mittal https://kushagr.net/
+/*
+* Calify: parse.js
+* Parses the source code from the unimelb timetable website (https://my.unimelb.edu.au/studentportal/faces/StudentAdmin/Timetable/SubjectTimetable).
+* Finds subjects (unit code and unit name), and classes (lectures, tutorials, workshops, practicals, seminars, etc.).
+*
+* By Kush Mittal https://kushagr.net/
+*/
+
 
 function text_to_el(text) {
     var el = document.createElement('html');
