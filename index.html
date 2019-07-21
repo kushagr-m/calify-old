@@ -63,9 +63,12 @@
         </div>
 
         <!-- Parsing -->
-        <script src="parse.js"></script>
+        <script src="js/parse.js"></script>
         <!-- Calendar Generation -->
-        <script src="ical.js"></script>
+        <script src="js/ical.js"></script>
+        <!-- FIle saving -->
+        <script src="js/FileSaver/Blob.js"></script>
+        <script src="js/FileSaver/FileSaver.js"></script>
         <script>
         var semester = {
                 'friendly_name': 'Semester 2, 2019',
@@ -112,7 +115,8 @@
             console.log('VCALENDAR');
             console.log(ics);
 
-            saveData(ics, "uni.ics");
+            var blob = new Blob([ics], { type: "text/plain;charset=utf-8"});
+            saveAs(blob, "Calify.ics");
 
         });
 
@@ -134,21 +138,6 @@
             textarea_msg.classList.remove('invalid-feedback');
             textarea_msg.innerHTML = String(feedback);
         }
-
-        // https://jsfiddle.net/koldev/cW7W5/
-        var saveData = (function () {
-            var a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            return function (data, fileName) {
-                var blob = new Blob([data], {type: "text/calendar"}),
-                    url = window.URL.createObjectURL(blob);
-                a.href = url;
-                a.download = fileName;
-                a.click();
-                window.URL.revokeObjectURL(url);
-            };
-        }());
 
         </script>
 
