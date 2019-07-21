@@ -1,12 +1,3 @@
-# Calify 
-<small>(formerly UniMelb Calendar to ICS)</small>
-
-### A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.
-
-[https://thekkcd.github.io/calify/](https://thekkcd.github.io/calify/)
-
-All processing and file generation is done client-side.
-
 ```
 MIT License
 
@@ -30,5 +21,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
-**Credit:** FileSaver.js and Blob.js by Eli Grey, licensed under MIT. Some other code snippets may be used throughout; In these cases, attribution is in a comment in the same file.
