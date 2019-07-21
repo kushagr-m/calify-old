@@ -1,3 +1,11 @@
+/*
+* Calify: ical.js.
+* Used to convert classes (a list of dicts) into an iCalendar .ics file (as a string).
+*
+* By Kush Mittal https://kushagr.net/
+*/
+
+
 function classesToICS(classes, semStart, lastDay, msBreak) {
     var ical = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:UnimelbCalendarToICS\n";
 
