@@ -40,13 +40,15 @@
 
 
             <textarea id="inputfield" class="form-control text-monospace" placeholder="copied data" rows="6"></textarea>
+            <div class="invalid-feedback" id="textarea-message"></div>
             <div class="mt-3 mb-n3">
                 <h4>Step 4</h4>
                 <p>
-                    Press the button to download your timetable!
+                    Press the 'generate' button to download your timetable!
                 </p>
             </div>
             <button id="submit" class="btn btn-primary my-3">Generate</button>
+            <!-- <button id="verbose" class="btn btn-light">Show verbose output</button> -->
             <div>
                 <p>
                     Once you've got your .ics file, you can open it in any calendar application, such as Apple Calendar and Microsoft Outlook. You can also <a href="https://calendar.google.com/calendar/r/settings/export">sync it with your Google Calendar</a>.
@@ -72,6 +74,7 @@
                 'start_2': '2019-10-7', // First day back
                 'last': '2019-10-27' // Last day of classes
             };
+        var textarea = document.getElementById('inputfield');
         
         
         document.getElementById('info').innerHTML = 'The current timetable pool is for ' + semester['friendly_name'] + '.'
@@ -80,9 +83,10 @@
             e.preventDefault(); // Prevent refreshing.
 
             // Get text from input box
-            var text = document.getElementById('inputfield').value;
+            var text = textarea.value;
             if (text.trim() == '') {
-                return
+                invalidInput("It doesn't look like you've entered anything here. Please paste in the source code from your timetable page.");
+                return;
             }
             // remove scripts - https://stackoverflow.com/questions/6659351/removing-all-script-tags-from-html-with-js-regular-expression
             var SCRIPT_RE = /<script(?:(?!\/\/)(?!\/\*)[^'"]|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\/.*(?:\n)|\/\*(?:(?:.|\s))*?\*\/)*?<\/script\s*>/gi;
@@ -98,20 +102,38 @@
             // console.log(classes);
 
             if (classes.length == 0) {
-                return
+                // We couldn't find any classew
+                invalidInput("You entered something, but we couldn't find any classes. Please make sure you've pasted in <em>all</em> of your source code.");
+                return;
             }
-            // Output result
-            // var result = 'Found ' + Object.keys(subjects).length + ' subjects, ' + classes.length + ' classes.';
-            // var res_el = document.createElement('p');
-            // res_el.innerHTML = result;
-            // document.getElementsByTagName('div')[0].appendChild(res_el);
 
+            validInput(['Great! We found', classes.length, 'classes, for', Object.keys(subjects).length, 'subjects.'].join(' '));
             var ics = classesToICS(classes, semester['start'], semester['last'], semester['msBreak']);
+            console.log('VCALENDAR');
             console.log(ics);
 
             saveData(ics, "uni.ics");
 
         });
+
+        var textarea_msg = document.getElementById('textarea-message');
+
+        function invalidInput(feedback) {
+            console.log(textarea);
+            textarea.classList.remove('is-valid');
+            textarea.classList.add('is-invalid');
+            textarea_msg.classList.remove('valid-feedback');
+            textarea_msg.classList.add('invalid-feedback');
+            textarea_msg.innerHTML = String(feedback);
+        };
+
+        function validInput(feedback) {
+            textarea.classList.remove('is-invalid');
+            textarea.classList.add('is-valid');
+            textarea_msg.classList.add('valid-feedback');
+            textarea_msg.classList.remove('invalid-feedback');
+            textarea_msg.innerHTML = String(feedback);
+        }
 
         // https://jsfiddle.net/koldev/cW7W5/
         var saveData = (function () {
@@ -127,10 +149,6 @@
                 window.URL.revokeObjectURL(url);
             };
         }());
-
-
-        
-
 
         </script>
 
