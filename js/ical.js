@@ -8,14 +8,14 @@
 
 function classesToICS(classes, semStart, lastDay, msBreak) {
     var ical = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:UnimelbCalendarToICS\n";
-
-    var startDate = new Date(semStart)
-    var lastDay = new Date(lastDay)
-    var msBreak = new Date(msBreak)
+    
+    var startDate = new Date(semStart),
+        lastDay = new Date(lastDay),
+        msBreak = new Date(msBreak);
 
     var events = classes.map(cla => classToVEVENT(cla, startDate, lastDay, msBreak)).join('');
 
-    var final = ical + events + 'END:VCALENDAR\n'
+    var final = ical + events + 'END:VCALENDAR\n';
     return final;
 }
 
