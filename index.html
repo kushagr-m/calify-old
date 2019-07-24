@@ -117,14 +117,6 @@
         </small>
     </div>
     
-    <!-- Collapse -->
-    <script>
-        document.getElementById('showOptions').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById("optionsCollapse").classList.toggle("d-none");
-        });
-    </script>
-    
     <!-- Parsing -->
     <script src="js/parse.js"></script>
     <!-- Calendar Generation -->
@@ -133,6 +125,14 @@
     <script src="js/FileSaver/Blob.js"></script>
     <script src="js/FileSaver/FileSaver.js"></script>
     <script>
+        const optionsBtn = document.getElementById('showOptions');
+        const optionsCard = document.getElementById("optionsCollapse");
+        // Options UI button toggle
+        optionsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            optionsCard.classList.toggle("d-none");
+        });
+
         const semester = {
             'friendly_name': 'Semester 2, 2019',
             'start': '2019-07-29', // First day of semester
@@ -146,6 +146,9 @@
         
         document.getElementById('submit').addEventListener("click", function(e){
             e.preventDefault(); // Prevent refreshing.
+            
+            // Close options UI
+            optionsCard.classList.add('d-none');
             
             // Get text from input box
             var text = textarea.value;
