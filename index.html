@@ -11,7 +11,7 @@
     </style>
 </head>
 <body>
-    <div class="container py-3">
+    <div class="container py-3 offset-md-3 col-md-6">
         <h1 class="font-weight-normal">Calify</h1>
         <h5 class="font-weight-normal mb-3">A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.</h5>
         <p id="info">Loading...</p>
@@ -51,24 +51,39 @@
             <p>
                 Select your options, then press the 'generate' button to download your timetable!
             </p>
+            
             <p>
                 
                 <button id="submit" class="btn btn-primary d-inline-block">Generate</button>
                 <button id="showOptions" class="btn btn-outline-secondary d-inline-block">
                     More options
                 </button>
-                <div id="optionsCollapse" class="card card-body d-none">
-                    
+                <div id="optionsCollapse" class="card card-body mb-3 offset-md-1 col-md-10 d-none">
                     <h5>Options</h5>
-                    <div class="form-check mt-2">
-                        <input class="form-check-input" type="checkbox" value="" id="showClassNumber">
-                        <label class="form-check-label" for="showClassNumber">
-                            Show class number in event title <small>(e.g. '<span class="text-monospace">Practical 1 (10)</span>' rather than '<span class="text-monospace">Practical 1</span>')</small>
-                        </label>
-                    </div>
                     
-                    <div class="my-1">
-                        <span class="d-block">Show campus name in event locations for <small>(e.g. '<span class="text-monospace">Parkville The Spot 5019</span>' rather than '<span class="text-monospace">The Spot 5019</span>')</small></span>
+                    <div class="mt-1 mb-2">
+                        <h6>In the event title, show:</h6>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" id="showUnitCode" value="" checked>
+                            <label class="form-check-label" for="showUnitCode">Show subject code (e.g. MAST10006)</label>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" id="showUnitName" value="" checked>
+                            <label class="form-check-label" for="showUnitName">Show subject name (e.g. Calculus 2)</label>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" value="" id="showClassNumber">
+                            <label class="form-check-label" for="showClassNumber">
+                                Show class number in event title
+                                <br><small>(e.g. '<span class="text-monospace">Practical 1 (10)</span>' rather than '<span class="text-monospace">Practical 1</span>')</small>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <h6>
+                            Show campus name in event locations? <br>
+                            <small>(e.g. '<span class="text-monospace">Parkville The Spot 5019</span>' rather than '<span class="text-monospace">The Spot 5019</span>')</small>
+                        </h6>
                         <div class="form-check mt-1">
                             <input class="form-check-input" type="radio" name="campusNameRadio" id="cnameAll" value="all">
                             <label class="form-check-label" for="cnameAll">All campuses</label>
@@ -88,7 +103,6 @@
                     </div>
                     
                 </div>
-                <!-- <button id="verbose" class="btn btn-light">Show verbose output</button> -->
             </p>
             <p>
                 Once you've got your .ics file, you can open it in any calendar application, such as Apple Calendar or Microsoft Outlook. You can also <a href="https://calendar.google.com/calendar/r/settings/export">sync it with your Google Calendar</a>.
@@ -106,6 +120,7 @@
     <!-- Collapse -->
     <script>
         document.getElementById('showOptions').addEventListener('click', function(e) {
+            e.preventDefault();
             document.getElementById("optionsCollapse").classList.toggle("d-none");
         });
     </script>
