@@ -141,6 +141,23 @@
     <script src="js/FileSaver/Blob.js"></script>
     <script src="js/FileSaver/FileSaver.js"></script>
     <script>
+        /*
+        * This semester.
+        * (Need to update before the start of every semester)
+        */
+        const semester = {
+            'friendly_name': 'Semester 2, 2019',
+            'start': '2019-07-29', // First day of semester
+            'msBreak': '2019-09-26', // First day of break
+            'start_2': '2019-10-7', // First day back
+            'last': '2019-10-27' // Last day of classes
+        };
+        document.getElementById('info').innerHTML = 'The current timetable pool is for ' + semester['friendly_name'] + '.';
+
+        /*
+        * Options-related code.
+        * Resetting options menu, collapsing options menu.
+        */
         const optionsBtn = document.getElementById('showOptions');
         const optionsCard = document.getElementById("optionsCollapse");
         // Options UI button toggle
@@ -162,18 +179,13 @@
         resetOptionsBtn.addEventListener('click', resetOptions);
         resetOptions();
 
-        const semester = {
-            'friendly_name': 'Semester 2, 2019',
-            'start': '2019-07-29', // First day of semester
-            'msBreak': '2019-09-26', // First day of break
-            'start_2': '2019-10-7', // First day back
-            'last': '2019-10-27' // Last day of classes
-        };
-        document.getElementById('info').innerHTML = 'The current timetable pool is for ' + semester['friendly_name'] + '.';
-        
+        /*
+        * Submit, textarea and parse.
+        */
         const textarea = document.getElementById('inputfield');
-        
-        document.getElementById('submit').addEventListener("click", function(e){
+        const submitBtn = document.getElementById('submit');
+
+        submitBtn.addEventListener("click", function(e){
             e.preventDefault(); // Prevent refreshing.
 
             // Get text from input box.
@@ -213,7 +225,7 @@
             }
 
             // Close options UI.
-            if (! Array.from(optionsCard.classList).includes("d-none")) {
+            if (!Array.from(optionsCard.classList).includes("d-none")) {
                 optionsBtn.click();
             }
             
@@ -241,6 +253,9 @@
             
         });
         
+        /*
+        * Helpers for textarea validation.
+        */
         const textarea_msg = document.getElementById('textarea-message');
         
         function invalidInput(feedback) {
