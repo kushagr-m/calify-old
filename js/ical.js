@@ -6,19 +6,19 @@
 */
 
 
-function classesToICS(classes, semStart, lastDay, msBreak) {
+function classesToICS(classes, options, semStart, lastDay, msBreak) {
     let ical = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:UnimelbCalendarToICS\n";
 
     let startDate = new Date(semStart),
-        lastDay = new Date(lastDay),
-        msBreak = new Date(msBreak);
+        lastDayObj = new Date(lastDay),
+        msBreakObj = new Date(msBreak);
 
-    let events = classes.map(cla => classToVEVENT(cla, startDate, lastDay, msBreak)).join('');
+    let events = classes.map(cla => classToVEVENT(cla, startDate, lastDayObj, msBreakObj, options)).join('');
 
     return [ical, events, 'END:VCALENDAR\n'].join('');
 }
 
-function classToVEVENT(thisclass, startDate, lastDay, msBreak) {
+function classToVEVENT(thisclass, startDate, lastDay, msBreak, options) {
     let startday = fdaString(startDate, thisclass['day']),
         DTSTAMP = dateToX(new Date()) + 'T000000',
         DTSTART = startday + 'T' + timeToHours(thisclass['time_begin']) + '00',
@@ -29,6 +29,16 @@ function classToVEVENT(thisclass, startDate, lastDay, msBreak) {
         SUMMARY = thisclass['code'] + ' ' + thisclass['name'] + ' ' + thisclass['class'],
         TRANSP = thisclass['transp']; 
 
+    let title = [];
+    if (options['showUnitCode']) {
+        title.push(thisclass['code']);
+    }
+    if (options['showUnitName']) {
+        title.push(thisclass['name']);
+    }
+    title.push(thisclass['class']);
+    title = title.join(' ');
+
     return [
         'BEGIN:VEVENT\nCLASS:PUBLIC\n',
         'DTSTAMP:', DTSTAMP, '\n',
@@ -37,7 +47,7 @@ function classToVEVENT(thisclass, startDate, lastDay, msBreak) {
         'EXDATE;TZID=Australia/Melbourne:', EXDATE, '\n',
         'DTEND;TZID=Australia/Melbourne:', DTEND, '\n',
         'LOCATION:', thisclass['location'], '\n',
-        'SUMMARY:', SUMMARY, '\n',
+        'SUMMARY:', title, '\n',
         'TRANSP:', TRANSP, '\n',
         'END:VEVENT\n'
     ].join('')

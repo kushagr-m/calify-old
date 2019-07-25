@@ -72,7 +72,7 @@
                             <label class="form-check-label" for="showUnitCode">Show subject code (e.g. MAST10006)</label>
                         </div>
                         <div class="form-check mt-1">
-                            <input class="form-check-input" type="checkbox" id="showUnitName" value="" checked>
+                            <input class="form-check-input" type="checkbox" id="showUnitName" value="">
                             <label class="form-check-label" for="showUnitName">Show subject name (e.g. Calculus 2)</label>
                         </div>
                         <div class="form-check mt-1">
@@ -148,15 +148,19 @@
             optionsCard.classList.toggle("d-none");
             optionsBtn.innerText = (Array.from(optionsCard.classList).includes("d-none")) ? "More options" : "Hide options";
         });
-        const resetOptions = document.getElementById("resetOptions");
-        resetOptions.addEventListener('click', () => {
+
+        // Reset options toggler
+        const resetOptionsBtn = document.getElementById("resetOptions");
+        function resetOptions() {
             document.getElementById('transpLectures').checked = true;
             document.getElementById("showUnitCode").checked = true;
-            document.getElementById("showUnitName").checked = true;
+            document.getElementById("showUnitName").checked = false;
             document.getElementById("showClassNumber").checked = false;
             document.getElementById("cnamePAR").checked = true;
-        });
-        
+        };
+        resetOptionsBtn.addEventListener('click', resetOptions);
+        resetOptions();
+
         const semester = {
             'friendly_name': 'Semester 2, 2019',
             'start': '2019-07-29', // First day of semester
@@ -171,17 +175,19 @@
         document.getElementById('submit').addEventListener("click", function(e){
             e.preventDefault(); // Prevent refreshing.
             
+            // Get options
+            const options = {
+                'showClassNumber': document.getElementById('showClassNumber').checked,
+                'showUnitCode': document.getElementById("showUnitCode").checked,
+                'showUnitName': document.getElementById("showUnitName").checked,
+                'showCampus': Array.from(document.getElementsByName('campusNameRadio')).filter(element => element.checked)[0].value,
+                'transpLectures': document.getElementById('transpLectures').checked
+            };
+
             // Close options UI
             if (! Array.from(optionsCard.classList).includes("d-none")) {
                 optionsBtn.click();
             }
-
-            // Get options
-            const options = {
-                'showClassNumber': document.getElementById('showClassNumber').checked,
-                'showCampus': Array.from(document.getElementsByName('campusNameRadio')).filter(element => element.checked)[0].value,
-                'transpLectures': document.getElementById('transpLectures').checked
-            };
             
             // Get text from input box
             let text = textarea.value;
@@ -205,9 +211,9 @@
             validInput(['Great! We found', classes.length, 'classes, for', Object.keys(subjects).length, 'subjects.'].join(' '));
             
             // Convert classes to ICS
-            let ics = classesToICS(classes, semester['start'], semester['last'], semester['msBreak']);
+            let ics = classesToICS(classes, options, semester['start'], semester['last'], semester['msBreak']);
             // console.log('VCALENDAR');
-            // console.log(ics);
+            console.log(ics);
             
             saveAs(new Blob([ics], { type: "text/plain;charset=utf-8" }), "Calify.ics");
             
