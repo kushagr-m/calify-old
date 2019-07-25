@@ -8,7 +8,7 @@
 
 function classesToICS(classes, semStart, lastDay, msBreak) {
     var ical = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:UnimelbCalendarToICS\n";
-    
+
     var startDate = new Date(semStart),
         lastDay = new Date(lastDay),
         msBreak = new Date(msBreak);
@@ -28,7 +28,7 @@ function classToVEVENT(thisclass, startDate, lastDay, msBreak) {
     var RRULE = 'FREQ=WEEKLY;UNTIL=' + rrend + 'T000000';
     var EXDATE = fdaString(msBreak, thisclass['day']) + 'T' + timeToHours(thisclass['time_begin']) + '00';
     var SUMMARY = thisclass['code'] + ' ' + thisclass['name'] + ' ' + thisclass['class'];
-    var TRANSP = (thisclass['class'].toLowerCase().includes("lecture")) ? "TRANSPARENT" : "OPAQUE"; 
+    var TRANSP = thisclass['transp']; 
 
     var vevent = 'BEGIN:VEVENT\nCLASS:PUBLIC\n';
     vevent += 'DTSTAMP:' + DTSTAMP + '\n';

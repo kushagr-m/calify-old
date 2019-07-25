@@ -40,7 +40,7 @@ function getClasses(el, subjects, options) {
         var code = String(panels[i].getElementsByClassName('cssTtableHeaderPanel')[0].innerHTML).trim();
         var time = String(panels[i].getElementsByClassName('cssTtableClsSlotWhen')[0].innerHTML).trim().replace(', ', '');
         var className = String(panels[i].getElementsByClassName('cssTtableClsSlotWhat')[0].innerHTML).trim();
-        
+
         // Option - if user does not want class number shown in event titles.
         if (!options['showClassNumber']) {
             const classNum_re =  / \(\d+\)$/gis;
@@ -67,6 +67,11 @@ function getClasses(el, subjects, options) {
             location = location.split(' ').slice(1, location.length - 1).join(' ');
         };
 
+        let transp = "OPAQUE";
+        if (options['transpLectures']) {
+            transp = (className.toLowerCase().includes("lecture")) ? "TRANSPARENT" : "OPAQUE"
+        }
+
         var cla = {
             'code': code,
             'name': subjects[code],
@@ -75,7 +80,8 @@ function getClasses(el, subjects, options) {
             'time': time,
             'location': location,
             'time_begin': time.split('-')[0],
-            'time_end': time.split('-')[1]
+            'time_end': time.split('-')[1],
+            'transp': transp
         };
         classes.push(cla)
     }

@@ -49,13 +49,19 @@
         <div class="mt-3">
             <h4>Step 4</h4>
             <p>
-                Select your options, then press the 'generate' button to download your timetable!
+                Select your options (if you want), then press the 'generate' button to download your timetable!
             </p>
             
             <p>
                 <div id="optionsCollapse" class="card card-body mb-3 offset-md-1 col-md-10 d-none">
                     <h5>Options</h5>
-                    
+                    <div class="mt-1 mb-2">
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" id="transpLectures" value="" checked>
+                            <label class="form-check-label" for="transpLectures">Show lectures as transparent ("free")</label>
+                        </div>
+                    </div>
+
                     <div class="mt-1 mb-2">
                         <h6>In the event title, show:</h6>
                         <div class="form-check mt-1">
@@ -141,6 +147,7 @@
         });
         const resetOptions = document.getElementById("resetOptions");
         resetOptions.addEventListener('click', () => {
+            document.getElementById('transpLectures').checked = true;
             document.getElementById("showUnitCode").checked = true;
             document.getElementById("showUnitName").checked = true;
             document.getElementById("showClassNumber").checked = false;
@@ -165,6 +172,13 @@
             if (! Array.from(optionsCard.classList).includes("d-none")) {
                 optionsBtn.click();
             }
+
+            // Get options
+            const options = {
+                'showClassNumber': document.getElementById('showClassNumber').checked,
+                'showCampus': Array.from(document.getElementsByName('campusNameRadio')).filter(element => element.checked)[0].value,
+                'transpLectures': document.getElementById('transpLectures').checked
+            };
             
             // Get text from input box
             var text = textarea.value;
@@ -172,12 +186,6 @@
                 invalidInput("It doesn't look like you've entered anything here. Please paste in the source code from your timetable page.");
                 return;
             }
-            
-            // Get options
-            const options = {
-                'showClassNumber': document.getElementById('showClassNumber').checked,
-                'showCampus': Array.from(document.getElementsByName('campusNameRadio')).filter(element => element.checked)[0].value
-            };
             
             // Parse the text
             var el = text_to_el(text);
