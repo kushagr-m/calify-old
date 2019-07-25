@@ -32,7 +32,7 @@ function getSubjects(el) {
     return subjects;
 };
 
-function getClasses(el, subjects, options) {
+function getClasses(el, subjects) {
     // Takes the HTML from the unimelb timetable page and returns a list of dicts of the classes on the timetable, ready to convert into any format.
     var panels = el.getElementsByClassName('cssClassInnerPanel');
     var classes = [];
@@ -40,35 +40,9 @@ function getClasses(el, subjects, options) {
         var code = String(panels[i].getElementsByClassName('cssTtableHeaderPanel')[0].innerHTML).trim();
         var time = String(panels[i].getElementsByClassName('cssTtableClsSlotWhen')[0].innerHTML).trim().replace(', ', '');
         var className = String(panels[i].getElementsByClassName('cssTtableClsSlotWhat')[0].innerHTML).trim();
+        var location = String(panels[i].getElementsByClassName('cssTtableClsSlotWhere')[0].innerHTML).trim();
 
-        // Option - if user does not want class number shown in event titles.
-        if (!options['showClassNumber']) {
-            const classNum_re =  / \(\d+\)$/gis;
-            className = className.replace(classNum_re, '');
-        }
-        var location = String(panels[i].getElementsByClassName('cssTtableClsSlotWhere')[0].innerHTML).trim()
-
-        // Option - if user does not want campus name in event titles.
-        switch (String(options['showCampus']).toLowerCase()) {
-            case 'none':
-                var campuses = ['Parkville', 'Southbank', 'Burnley', 'Creswick', 'Dookie', 'Werribee', 'Shepparton'];
-                break;
-            case 'parkville':
-                var campuses = ['Parkville'];
-                break;
-            case 'southbank':
-                var campuses = ['Southbank'];
-                break;
-            default:
-                var campuses = [];
-                break;
-        };
-        if (campuses.includes(location.split(' ')[0])) {
-            location = location.split(' ').slice(1, location.length - 1).join(' ');
-        };
-
-        let transp = (options['transpLectures'] && className.toLowerCase().includes("lecture")) ? "TRANSPARENT" : "OPAQUE";
-
+        
         var cla = {
             'code': code,
             'name': subjects[code],
@@ -77,8 +51,7 @@ function getClasses(el, subjects, options) {
             'time': time,
             'location': location,
             'time_begin': time.split('-')[0],
-            'time_end': time.split('-')[1],
-            'transp': transp
+            'time_end': time.split('-')[1]
         };
         classes.push(cla)
     }

@@ -19,24 +19,53 @@ function classesToICS(classes, options, semStart, lastDay, msBreak) {
 }
 
 function classToVEVENT(thisclass, startDate, lastDay, msBreak, options) {
+    
+    // Option - if user does not want class number shown in event titles.
+    let title = [];
+    if (options['showUnitCode']) { // Option - show subject code in event title, ex. MAST10006
+        title.push(thisclass['code']);
+    }
+    if (options['showUnitName']) { // Option - show subject name in event title, ex. Calculus 2
+        title.push(thisclass['name']);
+    }
+    // Option - don't show clas number in event title, ex. 'Practical 1 (10)' / 'Practical 1'
+    const classNum_re = / \(\d+\)$/gis;
+    title.push( // Replace regex matches if user has selected to not show class number, otherwise don't replace.
+        (!options['showClassNumber']) ? thisclass['class'].replace(classNum_re, '') : thisclass['class']
+    );
+    title = title.join(' ');
+
+    // Option - Show campus name in event titles.
+    switch (String(options['showCampus']).toLowerCase()) {
+        case 'none':
+            var campuses = ['Parkville', 'Southbank', 'Burnley', 'Creswick', 'Dookie', 'Werribee', 'Shepparton'];
+            break;
+        case 'parkville':
+            var campuses = ['Parkville'];
+            break;
+        case 'southbank':
+            var campuses = ['Southbank'];
+            break;
+        default:
+            var campuses = [];
+            break;
+    };
+    var location = thisclass['location'];
+    if (campuses.includes(location.split(' ')[0])) {
+        location = location.split(' ').slice(1, location.length - 1).join(' ');
+    };
+
+    // Option - make Lecture classes transparent / free.
+    let transp = (options['transpLectures'] && thisclass['class'].toLowerCase().includes("lecture")) ? "TRANSPARENT" : "OPAQUE";
+
+    // Calculate other variables and values.
     let startday = fdaString(startDate, thisclass['day']),
         dtstamp = dateToX(new Date()) + 'T000000',
         dtstart = startday + 'T' + timeToHours(thisclass['time_begin']) + '00',
         dtend = startday + 'T' + timeToHours(thisclass['time_end']) + '00',
         rrend = dateToX(lastDay),
         rrule = 'FREQ=WEEKLY;UNTIL=' + rrend + 'T000000',
-        exdate = fdaString(msBreak, thisclass['day']) + 'T' + timeToHours(thisclass['time_begin']) + '00',
-        transp = thisclass['transp']; 
-
-    let title = [];
-    if (options['showUnitCode']) {
-        title.push(thisclass['code']);
-    }
-    if (options['showUnitName']) {
-        title.push(thisclass['name']);
-    }
-    title.push(thisclass['class']);
-    title = title.join(' ');
+        exdate = fdaString(msBreak, thisclass['day']) + 'T' + timeToHours(thisclass['time_begin']) + '00';
 
     return [
         'BEGIN:VEVENT\nCLASS:PUBLIC\n',
@@ -45,7 +74,7 @@ function classToVEVENT(thisclass, startDate, lastDay, msBreak, options) {
         'RRULE;TZID=Australia/Melbourne:', rrule, '\n',
         'EXDATE;TZID=Australia/Melbourne:', exdate, '\n',
         'DTEND;TZID=Australia/Melbourne:', dtend, '\n',
-        'LOCATION:', thisclass['location'], '\n',
+        'LOCATION:', location, '\n',
         'SUMMARY:', title, '\n',
         'TRANSP:', transp, '\n',
         'END:VEVENT\n'
