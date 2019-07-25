@@ -82,6 +82,7 @@
                                 <br><small>(e.g. '<span class="text-monospace">Practical 1 (10)</span>' rather than '<span class="text-monospace">Practical 1</span>')</small>
                             </label>
                         </div>
+                        <div class="invalid-feedback mx-2" id="titleFeedback"></div>
                     </div>
                     <div class="mt-1">
                         <h6>
@@ -174,8 +175,16 @@
         
         document.getElementById('submit').addEventListener("click", function(e){
             e.preventDefault(); // Prevent refreshing.
+
+            // Get text from input box.
+            let text = textarea.value;
+            // Validate that the text is not empty.
+            if (text.trim() === '') {
+                invalidInput("It doesn't look like you've entered anything here. Please paste in the source code from your timetable page.");
+                return;
+            }
             
-            // Get options
+            // Get options.
             const options = {
                 'showClassNumber': document.getElementById('showClassNumber').checked,
                 'showUnitCode': document.getElementById("showUnitCode").checked,
@@ -184,33 +193,46 @@
                 'transpLectures': document.getElementById('transpLectures').checked
             };
 
-            // Close options UI
+            // If user has decided to show neither subject code nor subject name in event title.
+            if (!options['showUnitCode'] && !options['showUnitName']) {
+                // Open the options menu if it's not already open.
+                if (Array.from(optionsCard.classList).includes("d-none")) {
+                    optionsBtn.click();
+                }
+                // Show validator feedback.
+                let feedback = document.getElementById("titleFeedback");
+                if (!Array.from(feedback.classList).includes('d-block')) {
+                    feedback.innerHTML = "You've decided not to show the subject code nor the subject name in the event title.<br>This might be a bad idea, but if you were meaning to do this, then go ahead and click 'generate' again.";
+                    feedback.classList.add('d-block');
+                    return;
+                }
+                // Be lenient - if the user clicks the button twice, generate anyway.
+                else {
+                    feedback.classList.remove('d-block');
+                }
+            }
+
+            // Close options UI.
             if (! Array.from(optionsCard.classList).includes("d-none")) {
                 optionsBtn.click();
             }
             
-            // Get text from input box
-            let text = textarea.value;
-            if (text.trim() === '') {
-                invalidInput("It doesn't look like you've entered anything here. Please paste in the source code from your timetable page.");
-                return;
-            }
-            
-            // Parse the text
+            // Parse the text.
             let el = text_to_el(text);
             let subjects = getSubjects(el);
             let classes = getClasses(el, subjects, options);
             
             if (classes.length === 0) {
-                // We couldn't find any classes
+                // We couldn't find any classes.
                 invalidInput("You entered something, but we couldn't find any classes. Please make sure you've pasted in <em>all</em> of your source code.");
                 return;
+            } else {
+                // Feedback to show valid input.
+                validInput(['Great! We found', classes.length, 'classes, for', Object.keys(subjects).length, 'subjects.'].join(' '));
             }
             
-            // Feedback to show valid input
-            validInput(['Great! We found', classes.length, 'classes, for', Object.keys(subjects).length, 'subjects.'].join(' '));
             
-            // Convert classes to ICS
+            // Convert classes to ICS.
             let ics = classesToICS(classes, options, semester['start'], semester['last'], semester['msBreak']);
             // console.log('VCALENDAR');
             console.log(ics);
