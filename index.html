@@ -181,16 +181,16 @@
             };
             
             // Get text from input box
-            var text = textarea.value;
+            let text = textarea.value;
             if (text.trim() === '') {
                 invalidInput("It doesn't look like you've entered anything here. Please paste in the source code from your timetable page.");
                 return;
             }
             
             // Parse the text
-            var el = text_to_el(text);
-            var subjects = getSubjects(el);
-            var classes = getClasses(el, subjects, options);
+            let el = text_to_el(text);
+            let subjects = getSubjects(el);
+            let classes = getClasses(el, subjects, options);
             
             if (classes.length === 0) {
                 // We couldn't find any classes
@@ -202,7 +202,7 @@
             validInput(['Great! We found', classes.length, 'classes, for', Object.keys(subjects).length, 'subjects.'].join(' '));
             
             // Convert classes to ICS
-            var ics = classesToICS(classes, semester['start'], semester['last'], semester['msBreak']);
+            let ics = classesToICS(classes, semester['start'], semester['last'], semester['msBreak']);
             // console.log('VCALENDAR');
             // console.log(ics);
             

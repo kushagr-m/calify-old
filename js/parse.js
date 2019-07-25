@@ -14,19 +14,19 @@ function text_to_el(text) {
         text = text.replace(SCRIPT_RE, '');
     };
     // creates html element without adding it to the document.
-    var el = document.createElement('html');
+    let el = document.createElement('html');
     el.innerHTML = text;
     return el;
 }
 
 function getSubjects(el) {
     // Finds all the subjects (codes and names) on a timetable page.
-    var panels = el.getElementsByClassName('cssTtableSspNavMasterContainer');
-    var subjects = {};
+    let panels = el.getElementsByClassName('cssTtableSspNavMasterContainer');
+    let subjects = {};
+
     for (let i = 0; i < panels.length; i++) {
         let code = panels[i].getElementsByClassName('cssTtableRoundBorder')[0].getElementsByTagName('span')[0].innerHTML;
-        let name = panels[i].getElementsByClassName('cssTtableSspNavMasterSpkInfo3')[0].firstChild.innerHTML;
-        name = String(name).trim();
+        let name = panels[i].getElementsByClassName('cssTtableSspNavMasterSpkInfo3')[0].firstChild.innerHTML.trim();
         subjects[code] = name;
     };
     return subjects;
