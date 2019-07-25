@@ -53,11 +53,6 @@
             </p>
             
             <p>
-                
-                <button id="submit" class="btn btn-primary d-inline-block">Generate</button>
-                <button id="showOptions" class="btn btn-outline-secondary d-inline-block">
-                    More options
-                </button>
                 <div id="optionsCollapse" class="card card-body mb-3 offset-md-1 col-md-10 d-none">
                     <h5>Options</h5>
                     
@@ -103,6 +98,12 @@
                     </div>
                     
                 </div>
+                
+                <button id="submit" class="btn btn-primary d-inline-block">Generate</button>
+                <button id="showOptions" class="btn btn-outline-secondary d-inline-block">
+                    More options
+                </button>
+                
             </p>
             <p>
                 Once you've got your .ics file, you can open it in any calendar application, such as Apple Calendar or Microsoft Outlook. You can also <a href="https://calendar.google.com/calendar/r/settings/export">sync it with your Google Calendar</a>.
@@ -131,8 +132,9 @@
         optionsBtn.addEventListener('click', function(e) {
             e.preventDefault();
             optionsCard.classList.toggle("d-none");
+            optionsBtn.innerText = (Array.from(optionsCard.classList).includes("d-none")) ? "More options" : "Hide options";
         });
-
+        
         const semester = {
             'friendly_name': 'Semester 2, 2019',
             'start': '2019-07-29', // First day of semester
@@ -148,7 +150,9 @@
             e.preventDefault(); // Prevent refreshing.
             
             // Close options UI
-            optionsCard.classList.add('d-none');
+            if (! Array.from(optionsCard.classList).includes("d-none")) {
+                optionsBtn.click();
+            }
             
             // Get text from input box
             var text = textarea.value;
@@ -182,26 +186,21 @@
             // console.log('VCALENDAR');
             // console.log(ics);
             
-            saveAs(new Blob([ics], { type: "text/plain;charset=utf-8"}), "Calify.ics");
+            saveAs(new Blob([ics], { type: "text/plain;charset=utf-8" }), "Calify.ics");
             
         });
         
         const textarea_msg = document.getElementById('textarea-message');
         
         function invalidInput(feedback) {
-            console.log(textarea);
-            textarea.classList.remove('is-valid');
-            textarea.classList.add('is-invalid');
-            textarea_msg.classList.remove('valid-feedback');
-            textarea_msg.classList.add('invalid-feedback');
+            textarea.classList.remove('is-valid'); textarea.classList.add('is-invalid');
+            textarea_msg.classList.remove('valid-feedback'); textarea_msg.classList.add('invalid-feedback');
             textarea_msg.innerHTML = String(feedback);
         };
         
         function validInput(feedback) {
-            textarea.classList.remove('is-invalid');
-            textarea.classList.add('is-valid');
-            textarea_msg.classList.add('valid-feedback');
-            textarea_msg.classList.remove('invalid-feedback');
+            textarea.classList.remove('is-invalid'); textarea.classList.add('is-valid');
+            textarea_msg.classList.add('valid-feedback'); textarea_msg.classList.remove('invalid-feedback');
             textarea_msg.innerHTML = String(feedback);
         }
         
