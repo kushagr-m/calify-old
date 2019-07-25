@@ -42,7 +42,7 @@
             <p class="small">
                 This source code does not contain any identifying information (other than your class schedule). All processing and file generation is done client-side (without sending anything to a server), so I'm probably not going to be able to steal your data.
             </p>
-            <textarea id="inputfield" class="form-control text-monospace" placeholder="copied data" rows="6"></textarea>
+            <textarea id="inputfield" class="form-control text-monospace overflow-auto" placeholder="copied data" rows="6"></textarea>
             <div class="invalid-feedback" id="textarea-message"></div>
         </div>
         
@@ -82,7 +82,7 @@
                                 <br><small>(e.g. '<span class="text-monospace">Practical 1 (10)</span>' rather than '<span class="text-monospace">Practical 1</span>')</small>
                             </label>
                         </div>
-                        <div class="invalid-feedback mx-2" id="titleFeedback"></div>
+                        <div class="invalid-feedback px-2" id="titleFeedback"></div>
                     </div>
                     <div class="mt-1">
                         <h6>
@@ -154,17 +154,32 @@
         };
         document.getElementById('info').innerHTML = 'The current timetable pool is for ' + semester['friendly_name'] + '.';
 
+        // Parse and submit
+        const textarea = document.getElementById('inputfield');
+        const submitBtn = document.getElementById('submit');
+        const textarea_msg = document.getElementById('textarea-message'); // Feedback
+
+        // Options
+        const optionsBtn = document.getElementById('showOptions');
+        const optionsCard = document.getElementById("optionsCollapse");
+
         /*
         * Options-related code.
         * Resetting options menu, collapsing options menu.
         */
-        const optionsBtn = document.getElementById('showOptions');
-        const optionsCard = document.getElementById("optionsCollapse");
+        
         // Options UI button toggle
         optionsBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            optionsBtn.blur();
             optionsCard.classList.toggle("d-none");
-            optionsBtn.innerText = (Array.from(optionsCard.classList).includes("d-none")) ? "More options" : "Hide options";
+            if (Array.from(optionsCard.classList).includes("d-none")) {
+                optionsBtn.innerText = "More options";
+            } else {
+                optionsCard.focus();
+                optionsCard.scrollIntoView();
+                optionsBtn.innerText = "Hide options";
+            }
         });
 
         // Reset options toggler
@@ -180,22 +195,70 @@
         resetOptions();
 
         /*
-        * Submit, textarea and parse.
+        * Helpers for textarea validation.
         */
-        const textarea = document.getElementById('inputfield');
-        const submitBtn = document.getElementById('submit');
+        
+        function invalidInput(feedback) {
+            textarea.classList.remove('is-valid'); textarea.classList.add('is-invalid');
+            textarea_msg.classList.remove('valid-feedback'); textarea_msg.classList.add('invalid-feedback');
+            textarea_msg.innerHTML = String(feedback);
+        };
+        
+        function validInput(feedback) {
+            textarea.classList.remove('is-invalid'); textarea.classList.add('is-valid');
+            textarea_msg.classList.add('valid-feedback'); textarea_msg.classList.remove('invalid-feedback');
+            textarea_msg.innerHTML = String(feedback);
+        }
 
-        submitBtn.addEventListener("click", function(e){
-            e.preventDefault(); // Prevent refreshing.
+        /* 
+        * Validate and parse textarea on change and on paste.
+        */ 
+        var subjects;
+        var classes = [];
 
+        function textareaHandler() {
             // Get text from input box.
             let text = textarea.value;
             // Validate that the text is not empty.
             if (text.trim() === '') {
                 invalidInput("It doesn't look like you've entered anything here. Please paste in the source code from your timetable page.");
-                return;
+                textarea.focus();
+                textarea.scrollIntoView();
+                return 1;
             }
+
+            // Parse the text.
+            let el = text_to_el(text);
+            subjects = getSubjects(el);
+            classes = getClasses(el, subjects);
+            el = undefined; // Clears from memory.
             
+            if (classes.length === 0) {
+                // We couldn't find any classes.
+                invalidInput("You entered something, but we couldn't find any classes. Please make sure you've pasted in <em>all</em> of your source code.");
+                textarea.focus();
+                textarea.scrollIntoView();
+                return 1;
+            } else {
+                // Feedback to show valid input.
+                validInput(['Great! We found', classes.length, 'classes, for', Object.keys(subjects).length, 'subjects.'].join(' '));
+            }
+            return 0;
+            
+        }
+        textarea.addEventListener('input', textareaHandler);
+        // textarea.addEventListener('paste', textareaHandler);
+
+        /*
+        * Generate .ics on button press.
+        */
+        submitBtn.addEventListener("click", function(e){
+            e.preventDefault(); // Prevent refreshing.
+
+            if (!subjects || classes.length === 0) {
+                if (textareaHandler()) { return } // Nested if to run textareaHandler() only if necessary.
+            }
+
             // Get options.
             const options = {
                 'showClassNumber': document.getElementById('showClassNumber').checked,
@@ -214,7 +277,9 @@
                 // Show validator feedback.
                 let feedback = document.getElementById("titleFeedback");
                 if (!Array.from(feedback.classList).includes('d-block')) {
-                    feedback.innerHTML = "You've decided not to show the subject code nor the subject name in the event title.<br>This might be a bad idea, but if you were meaning to do this, then go ahead and click 'generate' again.";
+                    feedback.innerHTML = "<b>You've decided not to show the subject code nor the subject name in the event title, which might be a bad idea.</b> If this wasn't a mistake, go ahead and click 'generate' again.";
+                    feedback.focus();
+                    feedback.scrollIntoView();
                     feedback.classList.add('d-block');
                     return;
                 }
@@ -229,21 +294,6 @@
                 optionsBtn.click();
             }
             
-            // Parse the text.
-            let el = text_to_el(text);
-            let subjects = getSubjects(el);
-            let classes = getClasses(el, subjects, options);
-            
-            if (classes.length === 0) {
-                // We couldn't find any classes.
-                invalidInput("You entered something, but we couldn't find any classes. Please make sure you've pasted in <em>all</em> of your source code.");
-                return;
-            } else {
-                // Feedback to show valid input.
-                validInput(['Great! We found', classes.length, 'classes, for', Object.keys(subjects).length, 'subjects.'].join(' '));
-            }
-            
-            
             // Convert classes to ICS.
             let ics = classesToICS(classes, options, semester['start'], semester['last'], semester['msBreak']);
             // console.log('VCALENDAR');
@@ -252,23 +302,6 @@
             saveAs(new Blob([ics], { type: "text/plain;charset=utf-8" }), "Calify.ics");
             
         });
-        
-        /*
-        * Helpers for textarea validation.
-        */
-        const textarea_msg = document.getElementById('textarea-message');
-        
-        function invalidInput(feedback) {
-            textarea.classList.remove('is-valid'); textarea.classList.add('is-invalid');
-            textarea_msg.classList.remove('valid-feedback'); textarea_msg.classList.add('invalid-feedback');
-            textarea_msg.innerHTML = String(feedback);
-        };
-        
-        function validInput(feedback) {
-            textarea.classList.remove('is-invalid'); textarea.classList.add('is-valid');
-            textarea_msg.classList.add('valid-feedback'); textarea_msg.classList.remove('invalid-feedback');
-            textarea_msg.innerHTML = String(feedback);
-        }
         
     </script>
     
