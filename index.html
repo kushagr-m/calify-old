@@ -40,7 +40,7 @@
                 Once you've copied the source code from the timetable site, <b>paste it into the box</b> below.
             </p>
             <p class="small">
-                This source code does not contain any identifying information, and all of the generation is done without sending anything to any server, so I'm probably not going to be able to steal your data.
+                This source code does not contain any identifying information (other than your class schedule). All processing and file generation is done client-side (without sending anything to a server), so I'm probably not going to be able to steal your data.
             </p>
             <textarea id="inputfield" class="form-control text-monospace" placeholder="copied data" rows="6"></textarea>
             <div class="invalid-feedback" id="textarea-message"></div>
@@ -55,15 +55,18 @@
             <p>
                 <div id="optionsCollapse" class="card card-body mb-3 offset-md-1 col-md-10 d-none">
                     <h5>Options</h5>
+
                     <div class="mt-1 mb-2">
                         <div class="form-check mt-1">
                             <input class="form-check-input" type="checkbox" id="transpLectures" value="" checked>
-                            <label class="form-check-label" for="transpLectures">Show lectures as transparent ("free")</label>
+                            <label class="form-check-label" for="transpLectures">
+                                Show lectures as transparent (free)<br>
+                                <small>Non-lecture classes (tutorials, practicals, etc.) are always shown as opaque (busy)</small>
+                            </label>
                         </div>
                     </div>
-
                     <div class="mt-1 mb-2">
-                        <h6>In the event title, show:</h6>
+                        <h6>In the event title:</h6>
                         <div class="form-check mt-1">
                             <input class="form-check-input" type="checkbox" id="showUnitCode" value="" checked>
                             <label class="form-check-label" for="showUnitCode">Show subject code (e.g. MAST10006)</label>
