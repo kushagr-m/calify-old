@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Calify for Unimelb</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <style>
-            body {
+<head>
+    <title>Calify for Unimelb</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+        body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container pt-3">
-            <h1 class="font-weight-normal">Calify</h1>
-            <h5 class="font-weight-normal mb-3">A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.</h5>
-            <p id="info"></p>
-            
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-3 offset-md-3 col-md-6">
+        <h1 class="font-weight-normal">Calify</h1>
+        <h5 class="font-weight-normal mb-3">A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.</h5>
+        <p id="info">Loading...</p>
+        
+        <div>
             <h4>Step 1</h4>
             <p>
                 Log in to the <a target="_blank" href="https://prod.ss.unimelb.edu.au/student/SM/StudentTtable10.aspx?r=%23UM.STUDENT.APPLICANT&f=%24S1.EST.TIMETBL.WEB">timetabling website</a>. Keep the page open; You'll need it for the next step.
             </p>
-
+        </div>
+        
+        <div>
             <h4>Step 2</h4>
             <p>
                 You're going to need to <b>copy the source code of <em>the timetable webpage</em></b>, so that we can parse it and generate your timetable. 
@@ -29,117 +32,245 @@
                 On most browsers, you can look at the source code by right-clicking somewhere on that page and then clicking on 'View page source'. 
                 Once you've found the source code, select all of it (by pressing <span class="text-monospace">CTRL-A</span> or <span class="text-monospace">CMD-A</span>) and copy it by pressing <span class="text-monospace">CTRL-C</span> or <span class="text-monospace">CMD-C</span>.
             </p>
-
+        </div>
+        
+        <div>
             <h4>Step 3</h4>
             <p>
                 Once you've copied the source code from the timetable site, <b>paste it into the box</b> below.
             </p>
             <p class="small">
-                This source code does not contain any identifying information, and all of the generation is done without sending anything to any server, so I'm probably not going to be able to steal your data.
+                This source code does not contain any identifying information (other than your class schedule). All processing and file generation is done client-side (without sending anything to a server), so I'm probably not going to be able to steal your data.
             </p>
-
-
             <textarea id="inputfield" class="form-control text-monospace" placeholder="copied data" rows="6"></textarea>
             <div class="invalid-feedback" id="textarea-message"></div>
-            <div class="mt-3 mb-n3">
-                <h4>Step 4</h4>
-                <p>
-                    Press the 'generate' button to download your timetable!
-                </p>
-            </div>
-            <button id="submit" class="btn btn-primary my-3">Generate</button>
-            <!-- <button id="verbose" class="btn btn-light">Show verbose output</button> -->
-            <div>
-                <p>
-                    Once you've got your .ics file, you can open it in any calendar application, such as Apple Calendar and Microsoft Outlook. You can also <a href="https://calendar.google.com/calendar/r/settings/export">sync it with your Google Calendar</a>.
-                </p>
-            </div>
-            <hr>
-            <small>
-                Not associated with the University of Melbourne.<br>
-                <!-- Made by <a href="https://kushagr.net/">Kush M</a>.<br>  -->
-                Source on <a target="_blank" href="https://github.com/theKKCD/calify">GitHub</a>.
-            </small>
         </div>
-
-        <!-- Parsing -->
-        <script src="js/parse.js"></script>
-        <!-- Calendar Generation -->
-        <script src="js/ical.js"></script>
-        <!-- FIle saving -->
-        <script src="js/FileSaver/Blob.js"></script>
-        <script src="js/FileSaver/FileSaver.js"></script>
-        <script>
-        var semester = {
-                'friendly_name': 'Semester 2, 2019',
-                'start': '2019-07-29', // First day of semester
-                'msBreak': '2019-09-26', // First day of break
-                'start_2': '2019-10-7', // First day back
-                'last': '2019-10-27' // Last day of classes
-            };
-        var textarea = document.getElementById('inputfield');
         
-        
-        document.getElementById('info').innerHTML = 'The current timetable pool is for ' + semester['friendly_name'] + '.'
+        <div class="mt-3">
+            <h4>Step 4</h4>
+            <p>
+                Select your options (if you want), then press the 'generate' button to download your timetable!
+            </p>
+            
+            <p>
+                <div id="optionsCollapse" class="card card-body mb-3 offset-md-1 col-md-10 d-none">
+                    <h5>Options</h5>
 
-        document.getElementById('submit').addEventListener("click", function(e){
+                    <div class="mt-1 mb-2">
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" id="transpLectures" value="" checked>
+                            <label class="form-check-label" for="transpLectures">
+                                Show lectures as transparent (free)<br>
+                                <small>Non-lecture classes (tutorials, practicals, etc.) are always shown as opaque (busy)</small>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mt-1 mb-2">
+                        <h6>In the event title:</h6>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" id="showUnitCode" value="" checked>
+                            <label class="form-check-label" for="showUnitCode">Show subject code (e.g. MAST10006)</label>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" id="showUnitName" value="">
+                            <label class="form-check-label" for="showUnitName">Show subject name (e.g. Calculus 2)</label>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" value="" id="showClassNumber">
+                            <label class="form-check-label" for="showClassNumber">
+                                Show class number in event title
+                                <br><small>(e.g. '<span class="text-monospace">Practical 1 (10)</span>' rather than '<span class="text-monospace">Practical 1</span>')</small>
+                            </label>
+                        </div>
+                        <div class="invalid-feedback mx-2" id="titleFeedback"></div>
+                    </div>
+                    <div class="mt-1">
+                        <h6>
+                            Show campus name in event locations? <br>
+                            <small>(e.g. '<span class="text-monospace">Parkville The Spot 5019</span>' rather than '<span class="text-monospace">The Spot 5019</span>')</small>
+                        </h6>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="radio" name="campusNameRadio" id="cnameAll" value="all">
+                            <label class="form-check-label" for="cnameAll">All campuses</label>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="radio" name="campusNameRadio" id="cnamePAR" value="parkville" checked>
+                            <label class="form-check-label" for="cnamePAR">All campuses <em>except for Parkville</em></label>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="radio" name="campusNameRadio" id="cnameSTH" value="southbank">
+                            <label class="form-check-label" for="cnameSTH">All campuses <em>except for Southbank</em></label>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="radio" name="campusNameRadio" id="cnameNone" value="none">
+                            <label class="form-check-label" for="cnameNone">No campuses</label>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 mb-n1">
+                        <button class="btn btn-outline-secondary btn-sm mb-1" id="resetOptions">Reset to defaults</button>
+                    </div>
+                    
+                    
+                </div>
+                
+                <button id="submit" class="btn btn-primary d-inline-block">Generate</button>
+                <button id="showOptions" class="btn btn-outline-dark d-inline-block">
+                    More options
+                </button>
+                
+            </p>
+            <p>
+                Once you've got your .ics file, you can open it in any calendar application, such as Apple Calendar or Microsoft Outlook. You can also <a href="https://calendar.google.com/calendar/r/settings/export">sync it with your Google Calendar</a>.
+            </p>
+        </div>
+        
+        <hr>
+        <small>
+            Not associated with the University of Melbourne.<br>
+            <!-- Made by <a href="https://kushagr.net/">Kush M</a>.<br>  -->
+            Source on <a target="_blank" href="https://github.com/theKKCD/calify">GitHub</a>.
+        </small>
+    </div>
+    
+    <!-- Parsing -->
+    <script src="js/parse.js"></script>
+    <!-- Calendar Generation -->
+    <script src="js/ical.js"></script>
+    <!-- FIle saving -->
+    <script src="js/FileSaver/Blob.js"></script>
+    <script src="js/FileSaver/FileSaver.js"></script>
+    <script>
+        /*
+        * This semester.
+        * (Need to update before the start of every semester)
+        */
+        const semester = {
+            'friendly_name': 'Semester 2, 2019',
+            'start': '2019-07-29', // First day of semester
+            'msBreak': '2019-09-26', // First day of break
+            'start_2': '2019-10-7', // First day back
+            'last': '2019-10-27' // Last day of classes
+        };
+        document.getElementById('info').innerHTML = 'The current timetable pool is for ' + semester['friendly_name'] + '.';
+
+        /*
+        * Options-related code.
+        * Resetting options menu, collapsing options menu.
+        */
+        const optionsBtn = document.getElementById('showOptions');
+        const optionsCard = document.getElementById("optionsCollapse");
+        // Options UI button toggle
+        optionsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            optionsCard.classList.toggle("d-none");
+            optionsBtn.innerText = (Array.from(optionsCard.classList).includes("d-none")) ? "More options" : "Hide options";
+        });
+
+        // Reset options toggler
+        const resetOptionsBtn = document.getElementById("resetOptions");
+        function resetOptions() {
+            document.getElementById('transpLectures').checked = true;
+            document.getElementById("showUnitCode").checked = true;
+            document.getElementById("showUnitName").checked = false;
+            document.getElementById("showClassNumber").checked = false;
+            document.getElementById("cnamePAR").checked = true;
+        };
+        resetOptionsBtn.addEventListener('click', resetOptions);
+        resetOptions();
+
+        /*
+        * Submit, textarea and parse.
+        */
+        const textarea = document.getElementById('inputfield');
+        const submitBtn = document.getElementById('submit');
+
+        submitBtn.addEventListener("click", function(e){
             e.preventDefault(); // Prevent refreshing.
 
-            // Get text from input box
-            var text = textarea.value;
-            if (text.trim() == '') {
+            // Get text from input box.
+            let text = textarea.value;
+            // Validate that the text is not empty.
+            if (text.trim() === '') {
                 invalidInput("It doesn't look like you've entered anything here. Please paste in the source code from your timetable page.");
                 return;
             }
-            // remove scripts - https://stackoverflow.com/questions/6659351/removing-all-script-tags-from-html-with-js-regular-expression
-            var SCRIPT_RE = /<script(?:(?!\/\/)(?!\/\*)[^'"]|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\/.*(?:\n)|\/\*(?:(?:.|\s))*?\*\/)*?<\/script\s*>/gi;
-            while (SCRIPT_RE.test(text)) {
-                text = text.replace(SCRIPT_RE, '');
+            
+            // Get options.
+            const options = {
+                'showClassNumber': document.getElementById('showClassNumber').checked,
+                'showUnitCode': document.getElementById("showUnitCode").checked,
+                'showUnitName': document.getElementById("showUnitName").checked,
+                'showCampus': Array.from(document.getElementsByName('campusNameRadio')).filter(element => element.checked)[0].value,
+                'transpLectures': document.getElementById('transpLectures').checked
             };
 
-            // Parse the text
-            var el = text_to_el(text);
-            var subjects = getSubjects(el);
-            // console.log(subjects);
-            var classes = getClasses(el, subjects);
-            // console.log(classes);
-
-            if (classes.length == 0) {
-                // We couldn't find any classew
-                invalidInput("You entered something, but we couldn't find any classes. Please make sure you've pasted in <em>all</em> of your source code.");
-                return;
+            // If user has decided to show neither subject code nor subject name in event title.
+            if (!options['showUnitCode'] && !options['showUnitName']) {
+                // Open the options menu if it's not already open.
+                if (Array.from(optionsCard.classList).includes("d-none")) {
+                    optionsBtn.click();
+                }
+                // Show validator feedback.
+                let feedback = document.getElementById("titleFeedback");
+                if (!Array.from(feedback.classList).includes('d-block')) {
+                    feedback.innerHTML = "You've decided not to show the subject code nor the subject name in the event title.<br>This might be a bad idea, but if you were meaning to do this, then go ahead and click 'generate' again.";
+                    feedback.classList.add('d-block');
+                    return;
+                }
+                // Be lenient - if the user clicks the button twice, generate anyway.
+                else {
+                    feedback.classList.remove('d-block');
+                }
             }
 
-            validInput(['Great! We found', classes.length, 'classes, for', Object.keys(subjects).length, 'subjects.'].join(' '));
-            var ics = classesToICS(classes, semester['start'], semester['last'], semester['msBreak']);
-            console.log('VCALENDAR');
+            // Close options UI.
+            if (!Array.from(optionsCard.classList).includes("d-none")) {
+                optionsBtn.click();
+            }
+            
+            // Parse the text.
+            let el = text_to_el(text);
+            let subjects = getSubjects(el);
+            let classes = getClasses(el, subjects, options);
+            
+            if (classes.length === 0) {
+                // We couldn't find any classes.
+                invalidInput("You entered something, but we couldn't find any classes. Please make sure you've pasted in <em>all</em> of your source code.");
+                return;
+            } else {
+                // Feedback to show valid input.
+                validInput(['Great! We found', classes.length, 'classes, for', Object.keys(subjects).length, 'subjects.'].join(' '));
+            }
+            
+            
+            // Convert classes to ICS.
+            let ics = classesToICS(classes, options, semester['start'], semester['last'], semester['msBreak']);
+            // console.log('VCALENDAR');
             console.log(ics);
-
-            var blob = new Blob([ics], { type: "text/plain;charset=utf-8"});
-            saveAs(blob, "Calify.ics");
-
+            
+            saveAs(new Blob([ics], { type: "text/plain;charset=utf-8" }), "Calify.ics");
+            
         });
-
-        var textarea_msg = document.getElementById('textarea-message');
-
+        
+        /*
+        * Helpers for textarea validation.
+        */
+        const textarea_msg = document.getElementById('textarea-message');
+        
         function invalidInput(feedback) {
-            console.log(textarea);
-            textarea.classList.remove('is-valid');
-            textarea.classList.add('is-invalid');
-            textarea_msg.classList.remove('valid-feedback');
-            textarea_msg.classList.add('invalid-feedback');
+            textarea.classList.remove('is-valid'); textarea.classList.add('is-invalid');
+            textarea_msg.classList.remove('valid-feedback'); textarea_msg.classList.add('invalid-feedback');
             textarea_msg.innerHTML = String(feedback);
         };
-
+        
         function validInput(feedback) {
-            textarea.classList.remove('is-invalid');
-            textarea.classList.add('is-valid');
-            textarea_msg.classList.add('valid-feedback');
-            textarea_msg.classList.remove('invalid-feedback');
+            textarea.classList.remove('is-invalid'); textarea.classList.add('is-valid');
+            textarea_msg.classList.add('valid-feedback'); textarea_msg.classList.remove('invalid-feedback');
             textarea_msg.innerHTML = String(feedback);
         }
-
-        </script>
-
-    </body>
+        
+    </script>
+    
+</body>
 </html>
