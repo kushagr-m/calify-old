@@ -20,14 +20,13 @@ function classesToICS(classes, options, semStart, lastDay, msBreak) {
 
 function classToVEVENT(thisclass, startDate, lastDay, msBreak, options) {
     let startday = fdaString(startDate, thisclass['day']),
-        DTSTAMP = dateToX(new Date()) + 'T000000',
-        DTSTART = startday + 'T' + timeToHours(thisclass['time_begin']) + '00',
-        DTEND = startday + 'T' + timeToHours(thisclass['time_end']) + '00',
+        dtstamp = dateToX(new Date()) + 'T000000',
+        dtstart = startday + 'T' + timeToHours(thisclass['time_begin']) + '00',
+        dtend = startday + 'T' + timeToHours(thisclass['time_end']) + '00',
         rrend = dateToX(lastDay),
-        RRULE = 'FREQ=WEEKLY;UNTIL=' + rrend + 'T000000',
-        EXDATE = fdaString(msBreak, thisclass['day']) + 'T' + timeToHours(thisclass['time_begin']) + '00',
-        SUMMARY = thisclass['code'] + ' ' + thisclass['name'] + ' ' + thisclass['class'],
-        TRANSP = thisclass['transp']; 
+        rrule = 'FREQ=WEEKLY;UNTIL=' + rrend + 'T000000',
+        exdate = fdaString(msBreak, thisclass['day']) + 'T' + timeToHours(thisclass['time_begin']) + '00',
+        transp = thisclass['transp']; 
 
     let title = [];
     if (options['showUnitCode']) {
@@ -41,14 +40,14 @@ function classToVEVENT(thisclass, startDate, lastDay, msBreak, options) {
 
     return [
         'BEGIN:VEVENT\nCLASS:PUBLIC\n',
-        'DTSTAMP:', DTSTAMP, '\n',
-        'DTSTART;TZID=Australia/Melbourne:', DTSTART, '\n',
-        'RRULE;TZID=Australia/Melbourne:', RRULE, '\n',
-        'EXDATE;TZID=Australia/Melbourne:', EXDATE, '\n',
-        'DTEND;TZID=Australia/Melbourne:', DTEND, '\n',
+        'DTSTAMP:', dtstamp, '\n',
+        'DTSTART;TZID=Australia/Melbourne:', dtstart, '\n',
+        'RRULE;TZID=Australia/Melbourne:', rrule, '\n',
+        'EXDATE;TZID=Australia/Melbourne:', exdate, '\n',
+        'DTEND;TZID=Australia/Melbourne:', dtend, '\n',
         'LOCATION:', thisclass['location'], '\n',
         'SUMMARY:', title, '\n',
-        'TRANSP:', TRANSP, '\n',
+        'TRANSP:', transp, '\n',
         'END:VEVENT\n'
     ].join('')
 

@@ -67,10 +67,7 @@ function getClasses(el, subjects, options) {
             location = location.split(' ').slice(1, location.length - 1).join(' ');
         };
 
-        let transp = "OPAQUE";
-        if (options['transpLectures']) {
-            transp = (className.toLowerCase().includes("lecture")) ? "TRANSPARENT" : "OPAQUE"
-        }
+        let transp = (options['transpLectures'] && className.toLowerCase().includes("lecture")) ? "TRANSPARENT" : "OPAQUE";
 
         var cla = {
             'code': code,
