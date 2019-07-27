@@ -115,7 +115,7 @@ function dateToX(date) {
 function timeToHours(time) {
     let ts = time.split(' ');
     let hours = ts[0].replace(':', '');
-    if (hours.length() == 3) {
+    if (hours.length == 3) {
         hours = '0' + hours;
     };
     if (ts[1] === 'pm' && parseInt(hours) != 1200) {
