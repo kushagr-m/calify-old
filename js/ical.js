@@ -117,6 +117,7 @@ function timeToHours(time) {
     let hours = ts[0].replace(':', '');
     if (hours.length() == 3) {
         hours = '0' + hours;
+    };
     if (ts[1] === 'pm' && parseInt(hours) != 1200) {
         hours = String(parseInt(hours) + 1200);
     };
