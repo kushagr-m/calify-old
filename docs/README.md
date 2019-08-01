@@ -2,7 +2,7 @@
 
  A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.
 
-## [https://thekkcd.github.io/calify/](https://thekkcd.github.io/calify/)
+[https://thekkcd.github.io/calify/](https://thekkcd.github.io/calify/)
 
 All processing and file generation is done client-side.
 
