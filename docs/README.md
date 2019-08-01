@@ -1,34 +1,16 @@
 # Calify 
-<small>(formerly UniMelb Calendar to ICS)</small>
 
-### A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.
+ A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.
 
-[https://thekkcd.github.io/calify/](https://thekkcd.github.io/calify/)
+## [https://thekkcd.github.io/calify/](https://thekkcd.github.io/calify/)
 
 All processing and file generation is done client-side.
 
-```
-MIT License
+## License
+This software is licensed under MIT. See [LICENSE.md](LICENSE.md).
 
-Copyright (c) 2019 Kushagr Mittal.
+## Contributing  
+[**How to contribute and contributing guidelines.** (CONTRIBUTING.md)](CONTRIBUTING.md)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+We welcome contributions to Calify. Together, we can make a super-useful, super-convienient tool for all University of Melbourne students to use to organise their semester.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-**Credit:** FileSaver.js and Blob.js by Eli Grey, licensed under MIT. Some other code snippets may be used throughout; In these cases, attribution is in a comment in the same file.
