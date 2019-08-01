@@ -116,9 +116,12 @@ function dateToX(date) {
 
 function timeToHours(time) {
     let ts = time.split(' ');
-    let hours = parseInt(ts[0].replace(':', ''));
-    if (ts[1] === 'pm' && hours != 1200) {
-        hours += 1200;
+    let hours = ts[0].replace(':', '');
+    if (hours.length == 3) {
+        hours = '0' + hours;
+    };
+    if (ts[1] === 'pm' && parseInt(hours) != 1200) {
+        hours = String(parseInt(hours) + 1200);
     };
     return hours;
 }
