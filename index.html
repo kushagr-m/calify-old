@@ -67,6 +67,13 @@
                                 <small>Non-lecture classes (tutorials, practicals, etc.) are always shown as opaque (busy)</small>
                             </label>
                         </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" id="showDesc" value="" checked>
+                            <label class="form-check-label" for="showDesc">
+                                Display class details in description<br>
+                                <small>This includes data not shown by the options below.</small>
+                            </label>
+                        </div>
                     </div>
                     <div class="mt-1 mb-2">
                         <h6>In the event title:</h6>
@@ -192,6 +199,7 @@
         const resetOptionsBtn = document.getElementById("resetOptions");
         function resetOptions() {
             document.getElementById('transpLectures').checked = true;
+            document.getElementById('showDesc').checked = true;
             document.getElementById("showUnitCode").checked = true;
             document.getElementById("showUnitName").checked = false;
             document.getElementById("showClassNumber").checked = false;
@@ -271,7 +279,8 @@
                 'showUnitCode': document.getElementById("showUnitCode").checked,
                 'showUnitName': document.getElementById("showUnitName").checked,
                 'showCampus': Array.from(document.getElementsByName('campusNameRadio')).filter(element => element.checked)[0].value,
-                'transpLectures': document.getElementById('transpLectures').checked
+                'transpLectures': document.getElementById('transpLectures').checked,
+                'showDesc': document.getElementById('showDesc').checked
             };
 
             // If user has decided to show neither subject code nor subject name in event title.

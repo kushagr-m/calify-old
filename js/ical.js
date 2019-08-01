@@ -65,17 +65,19 @@ function classToVEVENT(thisclass, startDate, lastDay, msBreak, options) {
         dtend = startday + 'T' + timeToHours(thisclass['time_end']) + '00',
         rrend = dateToX(lastDay),
         rrule = 'FREQ=WEEKLY;UNTIL=' + rrend + 'T000000',
-        exdate = fdaString(msBreak, thisclass['day']) + 'T' + timeToHours(thisclass['time_begin']) + '00';
+        exdate = fdaString(msBreak, thisclass['day']) + 'T' + timeToHours(thisclass['time_begin']) + '00',
+        desc = (options['showDesc']) ? String([ thisclass['code'], thisclass['name'], thisclass['class'], thisclass['location']].join(' ')) : '';
 
     return [
         'BEGIN:VEVENT\nCLASS:PUBLIC\n',
         'DTSTAMP:', dtstamp, '\n',
         'DTSTART;TZID=Australia/Melbourne:', dtstart, '\n',
-        'RRULE;TZID=Australia/Melbourne:', rrule, '\n',
+        'RRULE:', rrule, '\n',
         'EXDATE;TZID=Australia/Melbourne:', exdate, '\n',
         'DTEND;TZID=Australia/Melbourne:', dtend, '\n',
         'LOCATION:', location, '\n',
         'SUMMARY:', title, '\n',
+        'DESCRIPTION:', desc, '\n',
         'TRANSP:', transp, '\n',
         'END:VEVENT\n'
     ].join('')
