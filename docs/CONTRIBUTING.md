@@ -26,12 +26,12 @@ Before you submit an issue, please double-check to make sure that you aren't dup
 If you have found a new issue, or have a new suggestion, please be as detailed as possible when you are describing it.
 
 This includes (but is not limited to)  
-[ ] Having an informative issue title  
-[ ] Describing the issue in detail in the body  
-[ ] Tag your issue appropriately (e.g. `bug` or `enhancement`)
-[ ] Detailing your OS, browser, browser version, etc.  
-[ ] If the issue occurs with specific classes or lectures, detailing the classes they are (e.g. subject name, lecture time, class code, etc.)  
-[ ] For feature suggestions, detailing how the feature might work.
+- [ ] Having an informative issue title  
+- [ ] Describing the issue in detail in the body  
+- [ ] Tag your issue appropriately (e.g. `bug` or `enhancement`)
+- [ ] Detailing your OS, browser, browser version, etc.  
+- [ ] If the issue occurs with specific classes or lectures, detailing the classes they are (e.g. subject name, lecture time, class code, etc.)  
+- [ ] For feature suggestions, detailing how the feature might work.
 
 ## Contributing directly (submitting a pull request)
 We also welcome pull requests! 
@@ -63,9 +63,9 @@ Once you have committed and pushed your changes to your fork, tested them, and a
 Similarly to issues, make your pull requests high quality.
 
 This includes (but is not limited to)  
-[ ] Having an informative PR title  
-[ ] Describing the issue that you are solving in detail in the body  
-[ ] Describing what caused the issue and what you did to fix it
-[ ] In the case of new features, outlining what the feature is, how it works, and why it is be useful.
+- [ ] Having an informative PR title  
+- [ ] Describing the issue that you are solving in detail in the body  
+- [ ] Describing what caused the issue and what you did to fix it
+- [ ] In the case of new features, outlining what the feature is, how it works, and why it is be useful.
 
 Once you submit a pull request, please wai  
