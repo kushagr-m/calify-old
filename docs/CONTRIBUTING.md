@@ -68,4 +68,4 @@ This includes (but is not limited to)
 - [ ] Describing what caused the issue and what you did to fix it
 - [ ] In the case of new features, outlining what the feature is, how it works, and why it is be useful.
 
-Once you submit a pull request, please wai  
+Once you submit a pull request, please wait for me to look over it and test it myself before merging it in.
