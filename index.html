@@ -124,8 +124,8 @@
                     
                 </div>
                 
-                <button id="submit" class="btn btn-primary d-inline-block">Generate</button>
-                <button id="showOptions" class="btn btn-outline-dark d-inline-block">
+                <button disabled id="submit" class="btn btn-primary d-inline-block">Generate</button>
+                <button disabled id="showOptions" class="btn btn-outline-dark d-inline-block">
                     More options
                 </button>
                 
@@ -216,12 +216,16 @@
             textarea.classList.remove('is-valid'); textarea.classList.add('is-invalid');
             textarea_msg.classList.remove('valid-feedback'); textarea_msg.classList.add('invalid-feedback');
             textarea_msg.innerHTML = String(feedback);
+            submitBtn.setAttribute('disabled', 'disabled');
+            optionsBtn.setAttribute('disabled', 'disabled');
         };
         
         function validInput(feedback) {
             textarea.classList.remove('is-invalid'); textarea.classList.add('is-valid');
             textarea_msg.classList.add('valid-feedback'); textarea_msg.classList.remove('invalid-feedback');
             textarea_msg.innerHTML = String(feedback);
+            submitBtn.removeAttribute('disabled');
+            optionsBtn.removeAttribute('disabled');
         }
 
         /* 
