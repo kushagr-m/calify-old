@@ -117,9 +117,16 @@
                         </div>
                     </div>
 
+                    <div class="card card-body mt-2 d-none" id="specificCollapse">
+                        <h5>Choose specific classes to export</h5>
+                        <div id="specificOptions"></div>
+                    </div>
+
                     <div class="mt-3 mb-n1">
                         <button class="btn btn-outline-secondary btn-sm mb-1" id="resetOptions">Reset to defaults</button>
+                        <button class="btn btn-light btn-sm mb-1 d-none" id="specificCollapseBtn">Choose specific classes</button>
                     </div>
+
                     
                     
                 </div>
@@ -171,15 +178,16 @@
         const textarea = document.getElementById('inputfield');
         const submitBtn = document.getElementById('submit');
         const textarea_msg = document.getElementById('textarea-message'); // Feedback
-
-        // Options
-        const optionsBtn = document.getElementById('showOptions');
-        const optionsCard = document.getElementById("optionsCollapse");
+   
 
         /*
         * Options-related code.
         * Resetting options menu, collapsing options menu.
         */
+
+        // Options
+        const optionsBtn = document.getElementById('showOptions');
+        const optionsCard = document.getElementById("optionsCollapse");
         
         // Options UI button toggle
         optionsBtn.addEventListener('click', function(e) {
@@ -208,6 +216,51 @@
         resetOptionsBtn.addEventListener('click', resetOptions);
         resetOptions();
 
+        // Classes UI button toggle
+        const specificCollapseBtn = document.getElementById('specificCollapseBtn'),
+              specificCollapse = document.getElementById('specificCollapse');
+        specificCollapseBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            specificCollapseBtn.blur();
+            specificCollapse.classList.toggle("d-none");
+            if (Array.from(specificCollapse.classList).includes("d-none")) {
+                specificCollapseBtn.innerText = "Choose specific classes";
+            } else {
+                specificCollapse.focus();
+                specificCollapse.scrollIntoView();
+                specificCollapseBtn.innerText = "Hide specific classes";
+            }
+        });
+
+        const specDiv = document.getElementById('specificOptions');
+        function updateSpecSelector(classes, subjects) {
+            specDiv.innerHTML = '';
+
+            var groupBy = function(xs, key) {
+                return xs.reduce(function(rv, x) {
+                    (rv[x[key]] = rv[x[key]] || []).push(x);
+                    return rv;
+                }, {});
+            };
+            let grouped = groupBy(classes, 'code');
+            console.log(grouped);
+            let gCodes = Object.keys(grouped);
+            for (let code of gCodes) {
+                specDiv.innerHTML += '<h6 class="mt-2">'+code+' '+subjects[code]+'</h6>';
+                for (let cla of grouped[code].sort((a, b) => a['class'].localeCompare(b['class']))) {
+                    let id = [cla['code'], '-', cla['class'].replace(/\W/, '-').replace('_', '')].join()
+                    let el = [
+                        '<div class="form-check">',
+                        '<input class="form-check-input" type="checkbox" name="', id, '" id="', id, '" value="none" checked>',
+                        '<label class="form-check-label" for="', id, '">', cla['class'].replace(/ \(\d+\)$/gis, ''), ' <small>', cla['day'], ' ', cla['time'], '</small>', '</label>',
+                        '</div>'
+                    ].join('')
+                    specDiv.innerHTML += el;
+                }
+            }
+
+        }
+
         /*
         * Helpers for textarea validation.
         */
@@ -216,12 +269,15 @@
             textarea.classList.remove('is-valid'); textarea.classList.add('is-invalid');
             textarea_msg.classList.remove('valid-feedback'); textarea_msg.classList.add('invalid-feedback');
             textarea_msg.innerHTML = String(feedback);
+            specificCollapse.classList.add('d-none');
+            specificCollapseBtn.classList.add('d-none');
         };
         
         function validInput(feedback) {
             textarea.classList.remove('is-invalid'); textarea.classList.add('is-valid');
             textarea_msg.classList.add('valid-feedback'); textarea_msg.classList.remove('invalid-feedback');
             textarea_msg.innerHTML = String(feedback);
+            specificCollapseBtn.classList.remove('d-none');
         }
 
         /* 
@@ -246,6 +302,7 @@
             subjects = getSubjects(el);
             classes = getClasses(el, subjects);
             el = undefined; // Clears from memory.
+            updateSpecSelector(classes, subjects);
             
             if (classes.length === 0) {
                 // We couldn't find any classes.
@@ -261,7 +318,6 @@
             
         }
         textarea.addEventListener('input', textareaHandler);
-        // textarea.addEventListener('paste', textareaHandler);
 
         /*
         * Generate .ics on button press.
