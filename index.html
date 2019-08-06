@@ -118,8 +118,15 @@
                     </div>
 
                     <div class="card card-body mt-2 d-none" id="specificCollapse">
-                        <h5>Choose specific classes to export</h5>
-                        <div id="specificOptions"></div>
+                        
+                        <div class="d-inline-block">
+                            <h5 class="d-inline-block mr-2">Choose specific classes to export</h5>
+                            <button class="btn btn-outline-dark btn-sm mt-n2" id="selectAllClasses">All</button>
+                            <button class="btn btn-outline-secondary btn-sm mt-n2" id="selectNoneClasses">None</button>
+                        </div>
+                        <div id="specificOptions">
+                            <!-- Specific options go here -->
+                        </div>
                     </div>
 
                     <div class="mt-3 mb-n1">
@@ -127,8 +134,6 @@
                         <button class="btn btn-light btn-sm mb-1 d-none" id="specificCollapseBtn">Choose specific classes</button>
                     </div>
 
-                    
-                    
                 </div>
                 
                 <button id="submit" class="btn btn-primary d-inline-block">Generate</button>
@@ -232,6 +237,9 @@
             }
         });
 
+        /*
+        * Update specific class selector menu.
+        */
         const specDiv = document.getElementById('specificOptions');
         function updateSpecSelector(classes, subjects) {
             specDiv.innerHTML = '';
@@ -260,6 +268,21 @@
             }
 
         }
+        // Select all / none
+        function classAll(b) {
+            const checkboxes = document.querySelectorAll('#specificOptions input');
+            for (let box of checkboxes) {
+                box.checked = !!b;
+            }
+        }
+        document.getElementById('selectAllClasses').addEventListener('click', function(e){
+            e.preventDefault(); 
+            classAll(true);
+        });
+        document.getElementById('selectNoneClasses').addEventListener('click', function(e) { 
+            e.preventDefault(); 
+            classAll(false); 
+        });
 
         /*
         * Helpers for textarea validation.
