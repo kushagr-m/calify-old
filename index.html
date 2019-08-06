@@ -266,7 +266,6 @@
                     specDiv.innerHTML += el;
                 }
             }
-
         }
         // Select all / none
         function classAll(b) {
@@ -352,6 +351,18 @@
                 if (textareaHandler()) { return } // Nested if to run textareaHandler() only if necessary.
             }
 
+            // Get which classes to export.
+            expClasses = classes.filter(c => {
+                let id = [c['code'], '-', c['class'].replace(/\W/, '-').replace('_', '')].join();
+                return document.getElementById(id).checked;
+            });
+            console.log(expClasses);
+            // If user has chosen not to export any classes.
+            if (expClasses.length < 1) {
+                alert("You've chosen not to export any classes.");
+                return;
+            }
+
             // Get options.
             const options = {
                 'showClassNumber': document.getElementById('showClassNumber').checked,
@@ -369,7 +380,7 @@
                     optionsBtn.click();
                 }
                 // Show validator feedback.
-                let feedback = document.getElementById("titleFeedback");
+                const feedback = document.getElementById("titleFeedback");
                 if (!Array.from(feedback.classList).includes('d-block')) {
                     feedback.innerHTML = "<b>You've decided not to show the subject code nor the subject name in the event title, which might be a bad idea.</b> If this wasn't a mistake, go ahead and click 'generate' again.";
                     feedback.focus();
@@ -382,14 +393,13 @@
                     feedback.classList.remove('d-block');
                 }
             }
-
             // Close options UI.
             if (!Array.from(optionsCard.classList).includes("d-none")) {
                 optionsBtn.click();
             }
             
             // Convert classes to ICS.
-            let ics = classesToICS(classes, options, semester['start'], semester['last'], semester['msBreak']);
+            let ics = classesToICS(expClasses, options, semester['start'], semester['last'], semester['msBreak']);
             // console.log('VCALENDAR');
             console.log(ics);
             
