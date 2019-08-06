@@ -136,8 +136,8 @@
 
                 </div>
                 
-                <button id="submit" class="btn btn-primary d-inline-block">Generate</button>
-                <button id="showOptions" class="btn btn-outline-dark d-inline-block">
+                <button disabled id="submit" class="btn btn-primary d-inline-block">Generate</button>
+                <button disabled id="showOptions" class="btn btn-outline-dark d-inline-block">
                     More options
                 </button>
                 
@@ -173,7 +173,7 @@
         const semester = {
             'friendly_name': 'Semester 2, 2019',
             'start': '2019-07-29', // First day of semester
-            'msBreak': '2019-09-26', // First day of break
+            'msBreak': '2019-09-30', // First monday of break
             'start_2': '2019-10-7', // First day back
             'last': '2019-10-27' // Last day of classes
         };
@@ -296,6 +296,8 @@
             textarea_msg.innerHTML = String(feedback);
             specificCollapse.classList.add('d-none');
             specificCollapseBtn.classList.add('d-none');
+            submitBtn.setAttribute('disabled', 'disabled');
+            optionsBtn.setAttribute('disabled', 'disabled');
         };
         
         function validInput(feedback) {
@@ -303,6 +305,8 @@
             textarea_msg.classList.add('valid-feedback'); textarea_msg.classList.remove('invalid-feedback');
             textarea_msg.innerHTML = String(feedback);
             specificCollapseBtn.classList.remove('d-none');
+            submitBtn.removeAttribute('disabled');
+            optionsBtn.removeAttribute('disabled');
         }
 
         /* 
