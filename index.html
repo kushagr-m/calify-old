@@ -352,7 +352,7 @@
             }
 
             // Get which classes to export.
-            expClasses = classes.filter(c => {
+            let expClasses = classes.filter(c => {
                 let id = [c['code'], '-', c['class'].replace(/\W/, '-').replace('_', '')].join();
                 return document.getElementById(id).checked;
             });
