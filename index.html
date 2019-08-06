@@ -208,35 +208,6 @@
             }
         });
 
-        // Reset options toggler
-        const resetOptionsBtn = document.getElementById("resetOptions");
-        function resetOptions() {
-            document.getElementById('transpLectures').checked = true;
-            document.getElementById('showDesc').checked = true;
-            document.getElementById("showUnitCode").checked = true;
-            document.getElementById("showUnitName").checked = false;
-            document.getElementById("showClassNumber").checked = false;
-            document.getElementById("cnamePAR").checked = true;
-        };
-        resetOptionsBtn.addEventListener('click', resetOptions);
-        resetOptions();
-
-        // Classes UI button toggle
-        const specificCollapseBtn = document.getElementById('specificCollapseBtn'),
-              specificCollapse = document.getElementById('specificCollapse');
-        specificCollapseBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            specificCollapseBtn.blur();
-            specificCollapse.classList.toggle("d-none");
-            if (Array.from(specificCollapse.classList).includes("d-none")) {
-                specificCollapseBtn.innerText = "Choose specific classes";
-            } else {
-                specificCollapse.focus();
-                specificCollapse.scrollIntoView();
-                specificCollapseBtn.innerText = "Hide specific classes";
-            }
-        });
-
         /*
         * Update specific class selector menu.
         */
@@ -281,6 +252,38 @@
         document.getElementById('selectNoneClasses').addEventListener('click', function(e) { 
             e.preventDefault(); 
             classAll(false); 
+        });
+
+        /*
+        * Reset options
+        */
+        const resetOptionsBtn = document.getElementById("resetOptions");
+        function resetOptions() {
+            classAll(true);
+            document.getElementById('transpLectures').checked = true;
+            document.getElementById('showDesc').checked = true;
+            document.getElementById("showUnitCode").checked = true;
+            document.getElementById("showUnitName").checked = false;
+            document.getElementById("showClassNumber").checked = false;
+            document.getElementById("cnamePAR").checked = true;
+        };
+        resetOptionsBtn.addEventListener('click', resetOptions);
+        resetOptions();
+
+        // Classes UI button toggle
+        const specificCollapseBtn = document.getElementById('specificCollapseBtn'),
+              specificCollapse = document.getElementById('specificCollapse');
+        specificCollapseBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            specificCollapseBtn.blur();
+            specificCollapse.classList.toggle("d-none");
+            if (Array.from(specificCollapse.classList).includes("d-none")) {
+                specificCollapseBtn.innerText = "Choose specific classes";
+            } else {
+                specificCollapse.focus();
+                specificCollapse.scrollIntoView();
+                specificCollapseBtn.innerText = "Hide specific classes";
+            }
         });
 
         /*
