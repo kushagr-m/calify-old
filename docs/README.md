@@ -1,6 +1,14 @@
+# Deprecation notice
+
+**This tool has been deprecated and is no longer usable, since the university has transitioned to a new timetabling system, Allocate+, which provides its own calendar sync.**
+
+The original readme is available below, and the resource is still available online, however it will no longer be maintained or updated.
+
+<hr>
+
 # Calify 
 
- A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.
+A tool to convert University of Melbourne timetables to iCal, to import into calendar apps.
 
 [https://thekkcd.github.io/calify/](https://thekkcd.github.io/calify/)
 
